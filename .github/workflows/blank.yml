@@ -1,25 +1,24 @@
-name: Python Deployment
+name: Build Docker Image
 
 on:
   push:
     branches:
-      - main
+      - master  # Change this to the branch you want to trigger the action on
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.x
-        
-    - name: Install dependencies
-      run: pip install -r requirements.txt
-      
-    - name: Run Python script
-      run: python app.py
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-action@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t actionsbuild .
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
